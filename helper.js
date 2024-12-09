@@ -1,4 +1,5 @@
 import { books, authors, genres } from "@/Data.json";
+import jwt from "jsonwebtoken";
 
 export const getBookById = id => {
     return books.find(book => book.id === id)
@@ -22,7 +23,7 @@ export const getSearchHistoryinLocalStorage = () => {
     if (!isBrowserEnvironment()) return;
     let recentSearches = JSON.parse(localStorage.getItem('recent_searches'));
     if (!recentSearches?.length) {
-      recentSearches = [];
+        recentSearches = [];
     }
     return recentSearches?.filter(query => query)?.reverse();
 }
@@ -33,3 +34,10 @@ export const setSearchHistoryinLocalStorage = (query) => {
     recentSearches.push(query);
     localStorage.setItem('recent_searches', JSON.stringify(recentSearches));
 }
+
+// ======================== Authentication ======================= //
+
+export const getEmail = (token) => {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded?.email;
+};
